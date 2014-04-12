@@ -26,16 +26,19 @@ int TaskProbe::attach_to_process(int pid) {
 
 int main(int argc, char * argv[]) {
 	int pid = fork();
-	if (pid == 0)
-	{
+	if (pid == 0) {
 		printf("I'm the child\n");
 		//execv("first", const_cast<char**>(argv));
 	}
-	else
-	{
+	else if (pid > 0) {
 		printf("I'm the parent, my child is %i\n", pid);
 		TaskProbe t = TaskProbe();
 		t.attach_to_process(pid);
 	}
+	else {
+		printf("Failed to fork child. ");
+		return -1;
+	}
+
 	return 0;
 }
