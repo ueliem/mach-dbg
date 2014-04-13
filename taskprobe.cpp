@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <mach/i386/thread_status.h>
-#include <ptrace.h>
+#include <sys/ptrace.h>
 #include "taskprobe.h"
 
 TaskProbe::TaskProbe() {
@@ -40,5 +40,10 @@ int TaskProbe::resume_task() {
 	if(task_resume(task) != KERN_SUCCESS) {
 		return -1;
 	}
+	return 0;
+}
+
+int TaskProbe::step_task() {
+	ptrace(PT_STEP, attached_process, (caddr_t)1, 0);
 	return 0;
 }
