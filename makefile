@@ -1,5 +1,5 @@
-all: dbg.cpp
-	g++ -o bin/dbg.o dbg.cpp
+all: dbg.cpp taskprobe.cpp
+	g++ -o bin/dbg.o dbg.cpp taskprobe.cpp
 
 run:
 	sudo ./bin/dbg.o
