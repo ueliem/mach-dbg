@@ -11,12 +11,30 @@ TaskProbe::TaskProbe() {
 	return;
 }
 
+int TaskProbe::attach_to_exec(char * executablename, char * argv[]) {
+	int childpid = fork();
+	if (childpid == 0) {
+		ptrace(PT_TRACE_ME, 0, 0, 0);
+		execv(executablename, const_cast<char**>(argv));
+	}
+	else if (childpid > 0) {
+		//printf("About to pause.");
+		attach_to_process(childpid);
+	}
+	else {
+		printf("Failed to fork child. ");
+		return -1;
+	}
+	return 0;
+}
+
 int TaskProbe::attach_to_process(int pid) {
 	int machout = task_for_pid(mach_task_self(), pid, &task);
 	if (machout != KERN_SUCCESS) {
 		printf("Failed to get task for pid. Error: %s\n", mach_error_string(machout));
 		return -1;
 	}
+	//ptrace(PT_ATTACH, pid, 0, 0);
 	attached_process = pid;
 	pause_task();
 	return 0;

@@ -8,38 +8,26 @@
 
 int main(int argc, char * argv[]) {
 	int status;
-	int pid = fork();
-	if (pid == 0) {
-		//printf("I'm the child\n");
-		execv("dummy", const_cast<char**>(argv));
+	TaskProbe t = TaskProbe();
+	t.attach_to_exec("dummy", argv);
+	if (t.is_attached_to_process()) {
+		//t.resume_task();
+		printf("%s\n", "Attached.");
 	}
-	else if (pid > 0) {
-		//printf("I'm the parent, my child is %i\n", pid);
-		TaskProbe t = TaskProbe();
-		printf("%s\n", "Getting ready to attach.");
-		t.attach_to_process(pid);
-		if (t.is_attached_to_process()) {
-			//t.resume_task();
-		}
-		//waitpid(pid, &status, WNOHANG);
-		waitpid(pid, &status, 0);
-		printf("%i\n", status);
-		if(WIFSTOPPED(status)) {
-			printf("Stopped.");
-		}
-		if(WIFCONTINUED(status)) {
-			printf("Continued.");
-		}
-		//if(WIFEXITTED(status)) {
-		//	printf("Exitted.");
-		//}
-		if(WIFSIGNALED(status)) {
-			printf("Signaled.");
-		}
+	//waitpid(pid, &status, WNOHANG);
+	waitpid(t.attached_process, &status, 0);
+	printf("%i\n", status);
+	if(WIFSTOPPED(status)) {
+		printf("Stopped.");
 	}
-	else {
-		printf("Failed to fork child. ");
-		return -1;
+	if(WIFCONTINUED(status)) {
+		printf("Continued.");
+	}
+	//if(WIFEXITTED(status)) {
+	//	printf("Exitted.");
+	//}
+	if(WIFSIGNALED(status)) {
+		printf("Signaled.");
 	}
 	return 0;
 }

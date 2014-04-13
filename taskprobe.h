@@ -1,6 +1,7 @@
 class TaskProbe {
 	public:
 		TaskProbe();
+		int attach_to_exec(char *, char **);
 		int attach_to_process(int);
 		bool is_attached_to_process();
 		int attached_process;
