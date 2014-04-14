@@ -13,21 +13,7 @@ int main(int argc, char * argv[]) {
 	if (t.is_attached_to_process()) {
 		//t.resume_task();
 		printf("%s\n", "Attached.");
-	}
-	//waitpid(pid, &status, WNOHANG);
-	waitpid(t.attached_process, &status, 0);
-	printf("%i\n", status);
-	if(WIFSTOPPED(status)) {
-		printf("Stopped.");
-	}
-	if(WIFCONTINUED(status)) {
-		printf("Continued.");
-	}
-	//if(WIFEXITTED(status)) {
-	//	printf("Exitted.");
-	//}
-	if(WIFSIGNALED(status)) {
-		printf("Signaled.");
+		t.run();
 	}
 	return 0;
 }

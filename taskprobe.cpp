@@ -65,3 +65,25 @@ int TaskProbe::step_task() {
 	ptrace(PT_STEP, attached_process, (caddr_t)1, 0);
 	return 0;
 }
+
+int TaskProbe::run() {
+	int status;
+	while (true) {
+		//waitpid(pid, &status, WNOHANG);
+		waitpid(attached_process, &status, 0);
+		printf("%i\n", status);
+		if(WIFSTOPPED(status)) {
+			printf("Stopped.");
+		}
+		if(WIFCONTINUED(status)) {
+			printf("Continued.");
+		}
+		//if(WIFEXITTED(status)) {
+		//	printf("Exitted.");
+		//}
+		if(WIFSIGNALED(status)) {
+			printf("Signaled.");
+		}
+	}
+	return 0;
+}
