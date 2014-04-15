@@ -7,7 +7,6 @@
 #include "taskprobe.h"
 
 int main(int argc, char * argv[]) {
-	int status;
 	TaskProbe t = TaskProbe();
 	t.attach_to_exec("dummy", argv);
 	if (t.is_attached_to_process()) {
