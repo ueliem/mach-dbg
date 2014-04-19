@@ -1,17 +1,36 @@
 #include <iostream>
-#include <mach/mach.h> 
+#include <mach/mach.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <mach/i386/thread_status.h>
+#include <mach/vm_map.h>
+#include <mach/mach_vm.h>
+#include <dlfcn.h>
 //#include <sys/ptrace.h>
 #include "taskprobe.h"
+#include "breakpoint.h"
 
 TaskProbe::TaskProbe() {
 	return;
 }
 
-int TaskProbe::attach_to_exec(char * executablename, char * argv[]) {
+int TaskProbe::getAddressOrigin() {
+	vm_map_size_t vmsize;
+    uint32_t nesting_depth = 0;
+    struct vm_region_submap_info_64 vbr;
+    mach_msg_type_number_t vbrcount = 16;
+
+	mach_vm_region_recurse(task, &baseaddress, &vmsize, &nesting_depth, (vm_region_recurse_info_t)&vbr, &vbrcount);
+	printf("%s%lld\n", "Address: ", baseaddress);
+	return 0;
+}
+
+/*int TaskProbe::getAddressBySymbol(char * symbol[]) {
+
+}*/
+
+int TaskProbe::attach_to_exec(const char * executablename, char * argv[]) {
 	int childpid = fork();
 	if (childpid == 0) {
 		//ptrace(PT_TRACE_ME, 0, 0, 0);
@@ -64,6 +83,12 @@ int TaskProbe::resume_task() {
 
 int TaskProbe::step_task() {
 	//ptrace(PT_STEP, attached_process, (caddr_t)1, 0);
+	return 0;
+}
+
+int TaskProbe::set_breakpoint(long long address) {
+	BreakPoint b = BreakPoint();
+	b.set(task, address + baseaddress/*MACH_VM_MIN_ADDRESS*/);
 	return 0;
 }
 

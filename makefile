@@ -1,5 +1,5 @@
-all: dbg.cpp taskprobe.cpp
-	g++ -o bin/dbg.o dbg.cpp taskprobe.cpp
+all: dbg.cpp taskprobe.cpp breakpoint.cpp
+	g++ -o bin/dbg.o dbg.cpp taskprobe.cpp breakpoint.cpp
 
 run:
 	sudo ./bin/dbg.o
