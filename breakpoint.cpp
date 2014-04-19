@@ -17,6 +17,9 @@ BreakPoint::BreakPoint() {
 }*/
 
 int BreakPoint::set(mach_port_t task, vm_offset_t address) {
+	/*if(task_suspend(task) != KERN_SUCCESS) {
+		return -1;
+	}*/
 	vm_offset_t intermediary;
 	mach_msg_type_number_t size = (size_t)1;
 	//printf("%llu\n", size);
@@ -30,8 +33,9 @@ int BreakPoint::set(mach_port_t task, vm_offset_t address) {
 	printf("Intermediary: %lu\n", intermediary);
 	original_byte = intermediary;
 	printf("Original Byte: %c\n", original_byte);
-	vm_offset_t break_trigger;
-	*(char *)break_trigger = 0xCC;
+	char value = 0xCC;
+	vm_offset_t break_trigger = (unsigned long)&value;
+	//*(char *)break_trigger = 0xCC;
 	if(KERN_SUCCESS != (err = mach_vm_write(task, address, break_trigger, size))) {
 		printf("Write: %s\n", mach_error_string(err));
 	}
