@@ -9,7 +9,8 @@ class TaskProbe {
 		int pause_task();
 		int resume_task();
 		int step_task();
-		int set_breakpoint(long long);
+		int set_breakpoint(unsigned long);
+		int set_breakpoint(const char *);
 		int run();
 		int getAddressOrigin();
 		int getSymbolsFromTable();
@@ -17,5 +18,5 @@ class TaskProbe {
 		thread_act_port_array_t thread_list;
 		mach_msg_type_number_t threadCount;
 		mach_port_t task;
-		unsigned long long baseaddress;
+		vm_offset_t baseaddress;
 };

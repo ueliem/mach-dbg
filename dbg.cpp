@@ -9,13 +9,15 @@
 
 int main(int argc, char * argv[]) {
 	TaskProbe t = TaskProbe();
-	const char * prog = "dummy\0";
+	const char * prog = "dummy2\0";
+	const char * symbol = "main\0";
 	t.attach_to_exec(prog, argv);
 	if (t.is_attached_to_process()) {
 		//t.resume_task();
-		printf("%s\n", "Attached.");
 		t.getAddressOrigin();
-		t.set_breakpoint(0x0000000100000ef0);
+		printf("%s\n", "Attached.");
+		t.set_breakpoint(0x100000ef0);
+		//t.set_breakpoint(symbol);
 		t.run();
 	}
 	return 0;
